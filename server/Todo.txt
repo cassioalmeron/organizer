@@ -1,0 +1,24 @@
+* Nexts
+- Celebrate/JOY OK
+- Firebase integration google account
+- Integration with front-end
+- MUI form validation YUP
+- Unit Tests
+- Integration Tests
+
+* Validations
+- Service validate at least one file
+
+* Adjusts After
+- Add Transaction
+- Disable ESLint
+- See better way to avoid await inside a loop
+- Repository Pattern
+
+
+
+
+
+"typeorm": "^0.2.36",
+
+https://www.youtube.com/watch?v=7v82TmUsBQo
