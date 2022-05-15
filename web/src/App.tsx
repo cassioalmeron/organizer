@@ -12,6 +12,8 @@ import theme from './assets/styles/theme';
 import AppProvider from './hooks';
 
 function App() {
+  console.log('APP');
+
   return (
     <div className="App">
       <AppProvider>

@@ -13,6 +13,8 @@ export default function Routes(): React.ReactElement {
 
   useEffect(() => {}, [auth]);
 
+  console.log('TESTE');
+
   const getElement = useCallback(
     (element: React.ReactElement, isPrivate = false) => {
       const expiredToken = auth && isExpired(getExpirationDate(auth.token));
