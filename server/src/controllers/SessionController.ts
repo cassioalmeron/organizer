@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { container } from 'tsyringe';
 import authConfig from '../config/auth';
-import UserRepository from '../Repositories/UserRepository';
-import CreateUserService, { UserDto } from '../Services/CreateUserService';
+import CreateSessionService from '../Services/CreateSessionService';
+import { UserDto } from '../Services/CreateUserService';
 
 type RequestDto = {
   token: string;
@@ -22,17 +23,11 @@ class SessionController {
 
     const decoded = decodeRequestData(requestData.token);
 
-    const userRepository = new UserRepository();
-    let user = await userRepository.findBySocialToken(decoded.socialId);
+    const service = container.resolve(CreateSessionService);
+    const session = await service.execute(decoded);
 
-    if (!user) {
-      const createUserService = new CreateUserService();
-      user = await createUserService.execute(decoded);
-    }
-
-    const { id, name, email } = user;
-
-    const token = createSessionToken(id);
+    const { token, user } = session;
+    const { name, email } = user;
 
     const res: ResponseDto = {
       token,
@@ -53,13 +48,6 @@ function decodeRequestData(token: string): UserDto {
   ) as UserDto;
 
   return decoded;
-}
-
-function createSessionToken(id: number): string {
-  const token = jwt.sign({ id }, authConfig.secretSession, {
-    expiresIn: authConfig.expiresIn,
-  });
-  return token;
 }
 
 export default new SessionController();

@@ -1,7 +1,8 @@
 import { getRepository, Repository } from 'typeorm';
 import User from '../models/User';
+import IUserRepository, { CreateUserDto } from './IUserRepository';
 
-class UserRepository {
+class UserRepository implements IUserRepository {
   constructor() {
     this.repository = getRepository(User);
   }
@@ -18,11 +19,12 @@ class UserRepository {
     return emailExists;
   }
 
-  public async save(data: {
-    socialId: string;
-    name: string;
-    email: string;
-  }): Promise<User> {
+  public async socialIdExists(socialId: string): Promise<boolean> {
+    const exists = (await this.repository.count({ socialId })) > 0;
+    return exists;
+  }
+
+  public async save(data: CreateUserDto): Promise<User> {
     let user = await this.repository.create(data);
     user = await this.repository.save(user);
     return user;

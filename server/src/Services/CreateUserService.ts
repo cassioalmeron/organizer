@@ -1,13 +1,10 @@
+/* eslint-disable no-useless-constructor */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import AppError from '../errors/AppError';
-import Document from '../models/Document';
-import HashTag from '../models/HashTag';
 import User from '../models/User';
-import DocumentRepository from '../Repositories/DocumentRepository';
-import HashtagRepository from '../Repositories/HashtagRepository';
-import UserRepository from '../Repositories/UserRepository';
+import IUserRepository from '../Repositories/IUserRepository';
 
 export type UserDto = {
   name: string;
@@ -16,16 +13,24 @@ export type UserDto = {
 };
 
 class CreateUserService {
-  public async execute(data: UserDto): Promise<User> {
-    const userRepository = new UserRepository();
+  constructor(private userRepository: IUserRepository) {}
 
-    const emailExists = await userRepository.emailExists(data.email);
+  public async execute(data: UserDto): Promise<User> {
+    const emailExists = await this.userRepository.emailExists(data.email);
     if (emailExists)
       throw new AppError(
-        `A user with e-mail '${data.email}' is already registred!`,
+        `A user with e-mail '${data.email}' is already registered!`,
       );
 
-    const user = await userRepository.save(data);
+    const socialIdExists = await this.userRepository.socialIdExists(
+      data.socialId,
+    );
+    if (socialIdExists)
+      throw new AppError(
+        `A user with Social Id '${data.socialId}' is already registered!`,
+      );
+
+    const user = await this.userRepository.save(data);
     return user;
   }
 }
