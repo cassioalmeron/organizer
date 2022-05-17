@@ -13,8 +13,6 @@ export default function Routes(): React.ReactElement {
 
   useEffect(() => {}, [auth]);
 
-  console.log('TESTE');
-
   const getElement = useCallback(
     (element: React.ReactElement, isPrivate = false) => {
       const expiredToken = auth && isExpired(getExpirationDate(auth.token));
@@ -37,12 +35,13 @@ export default function Routes(): React.ReactElement {
     <RoutesDom>
       <Route path="/" element={getElement(<Home />, true)} />
       <Route path="/Login" element={getElement(<Login />)} />
+      <Route path="/Document/:id" element={getElement(<Document />, true)} />
       <Route path="/Document" element={getElement(<Document />, true)} />
       <Route
         path="/SearchResult"
         element={getElement(<SearchResult />, true)}
       />
-      <Route path="/Test" element={getElement(<Test />)} />
+      <Route path="/Test" element={getElement(<Test />, true)} />
     </RoutesDom>
   );
 }

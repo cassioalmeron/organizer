@@ -31,6 +31,13 @@ export function apiPut(
   apiRequest(url, body, 'PUT', callback);
 }
 
+export function apiDelete(
+  url: string,
+  callback: ApiCallback | Simplecallback,
+): void {
+  apiRequest(url, null, 'DELETE', callback);
+}
+
 function apiRequest(
   url: string,
   body: any,

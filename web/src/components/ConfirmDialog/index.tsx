@@ -20,40 +20,43 @@ import { TransitionProps } from '@mui/material/transitions';
 
 interface ConfirmDialogProps {
   message: string;
+  open: boolean;
   onConfirm: (userResponse: boolean) => void;
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   message,
+  open,
   onConfirm,
 }) => {
-  // const [open, setOpen] = React.useState(true);
-
   const handleClose = (value: boolean) => {
-    // setOpen(false);
     onConfirm(value);
   };
 
   return (
     <Dialog
-      open
+      open={open}
       // TransitionComponent={Transition}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Seu Emprego Já</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Organizer</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {message}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => handleClose(true)} color="primary">
-          Sim
+        <Button
+          onClick={() => handleClose(true)}
+          color="primary"
+          variant="contained"
+        >
+          Yes
         </Button>
         <Button onClick={() => handleClose(false)} color="primary" autoFocus>
-          Não
+          No
         </Button>
       </DialogActions>
     </Dialog>

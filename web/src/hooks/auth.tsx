@@ -84,7 +84,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
           await post(socialToken, callback);
         } else {
-          toast.warning('Nenhuma conta foi selecionada!');
+          toast.warning('No selected account!');
         }
       } finally {
         if (callback.finally) callback.finally();

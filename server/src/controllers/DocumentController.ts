@@ -17,7 +17,7 @@ class DocumentController {
   async index(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
     const repository = new DocumentRepository();
-    const document = await repository.findById(Number(id), request.user.id);
+    const document = await repository.findToEdit(Number(id), request.user.id);
     return response.status(200).json(document);
   }
 

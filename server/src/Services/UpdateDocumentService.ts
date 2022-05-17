@@ -2,7 +2,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import Document from '../models/Document';
-import HashTag from '../models/HashTag';
 import DocumentRepository from '../Repositories/DocumentRepository';
 import HashtagRepository from '../Repositories/HashtagRepository';
 

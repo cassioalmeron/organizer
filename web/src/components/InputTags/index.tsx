@@ -15,7 +15,7 @@ type TagsArgs = {
 };
 
 type InputTagsArgs = {
-  tags?: string[];
+  tags: string[];
   onTagsChanged?: (tags: string[]) => void;
 };
 
@@ -47,14 +47,14 @@ const Tags = ({ data, handleDelete }: TagsArgs) => {
 };
 
 const InputTags: React.FC<InputTagsArgs> = args => {
-  const { onTagsChanged } = args;
+  const { onTagsChanged, tags } = args;
 
-  const [tags, setTags] = useState<string[]>(() => args.tags ?? []);
+  // const [tags, setTags] = useState<string[]>(() => args.tags ?? []);
   const tagRef = useRef<TextFieldProps>();
 
   const handleDelete = (value: string) => {
     const newtags = tags.filter(val => val !== value);
-    setTags(newtags);
+    // setTags(newtags);
     if (onTagsChanged) onTagsChanged(newtags);
   };
 
@@ -64,14 +64,14 @@ const InputTags: React.FC<InputTagsArgs> = args => {
         e.preventDefault();
         if (tagRef.current) {
           const tagsWithNewItem = [...tags, String(tagRef.current?.value)];
-          setTags(tagsWithNewItem);
+          // setTags(tagsWithNewItem);
           if (onTagsChanged) onTagsChanged(tagsWithNewItem);
 
           tagRef.current.value = '';
         }
       }
     },
-    [tags],
+    [onTagsChanged],
   );
 
   return (

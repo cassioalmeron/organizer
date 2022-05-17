@@ -1,63 +1,118 @@
-import { Container, Fab, Pagination } from '@mui/material';
+/* eslint-disable react/no-array-index-key */
+import { Container, Fab, Modal } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import RemoveIcon from '@mui/icons-material/Remove';
-import React, { useEffect, useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box } from '@mui/system';
-import { useParams } from 'react-router-dom';
-import { apiGet } from '../../services/api';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { apiDelete, apiGet } from '../../services/api';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import ModalFiles from './ModalFiles';
 
 type Row = {
   id: number;
   title: string;
   hashTags: string;
+
+  files: string[];
 };
 
-const columns: GridColDef[] = [
-  {
-    field: 'title',
-    headerName: 'Title',
-    width: 550,
-  },
-  {
-    field: 'hashTags',
-    headerName: 'Hash Tags',
-    width: 350,
-  },
-  {
-    field: 'a',
-    headerName: '',
-    width: 95,
-    renderCell: (params: GridRenderCellParams<Date>) => {
-      return (
-        <Box display="flex" alignItems="center">
-          <Fab size="small" color="secondary" aria-label="add">
-            <DocumentScannerIcon
-              onClick={() => openOriginal(params.row)}
-              sx={{ cursor: 'pointer' }}
-            />
-          </Fab>
-
-          <Fab size="small" color="error" aria-label="add">
-            <RemoveIcon />
-          </Fab>
-        </Box>
-      );
-    },
-  },
-];
-
-function openOriginal(row: Row) {
-  window.open('https://onedrive.live.com/?id=root&cid=D73A3A038DA9121A');
-}
-
 const SearchResult: React.FC = () => {
-  const { keyWord } = useParams();
+  const navigate = useNavigate();
+  const [queryParams] = useSearchParams();
   const [rows, setRows] = useState<Row[]>([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [showFilesModal, setShowFilesModal] = useState(false);
+  const [currentRow, setCurrentRow] = useState<Row | undefined>();
 
   useEffect(() => {
-    getData(keyWord, responseData => setRows(responseData));
-  }, [keyWord]);
+    getData(queryParams.get('keyWord') ?? undefined, responseData =>
+      setRows(responseData),
+    );
+  }, [queryParams]);
+
+  const columns: GridColDef[] = [
+    {
+      field: 'title',
+      headerName: 'Title',
+      width: 550,
+    },
+    {
+      field: 'hashTags',
+      headerName: 'Hash Tags',
+      width: 350,
+    },
+    {
+      field: 'a',
+      headerName: '',
+      width: 155,
+      renderCell: (params: GridRenderCellParams<Date>) => {
+        return (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ width: '100%' }}
+          >
+            <Fab size="small" color="primary" aria-label="add">
+              <EditIcon
+                onClick={() => handleEdit(params.row)}
+                sx={{ cursor: 'pointer' }}
+              />
+            </Fab>
+
+            <Fab size="small" color="secondary" aria-label="add">
+              <DocumentScannerIcon
+                onClick={() => {
+                  setCurrentRow(params.row);
+                  setShowFilesModal(true);
+                }}
+                sx={{ cursor: 'pointer' }}
+              />
+            </Fab>
+
+            <Fab
+              size="small"
+              color="error"
+              aria-label="add"
+              onClick={() => {
+                setCurrentRow(params.row);
+                setDeleteDialogOpen(true);
+              }}
+            >
+              <RemoveIcon />
+            </Fab>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const handleEdit = useCallback(
+    (row: Row) => {
+      navigate(`/Document/${row.id}`);
+    },
+    [navigate],
+  );
+
+  const handleCloseFilesModal = useCallback(() => {
+    setShowFilesModal(false);
+  }, []);
+
+  const confirmDelete = useCallback(
+    (value: boolean) => {
+      setDeleteDialogOpen(false);
+      if (value) {
+        apiDelete(`Document/${currentRow?.id}`, () => {
+          const newRows = rows.filter(row => row.id !== currentRow?.id);
+          setRows(newRows);
+        });
+      }
+    },
+    [currentRow, rows],
+  );
 
   return (
     <Container sx={{ height: '90%' }}>
@@ -71,7 +126,21 @@ const SearchResult: React.FC = () => {
         hideFooter
       />
 
-      <Pagination count={10} page={1} />
+      {/* <Pagination count={10} page={1} /> */}
+
+      <ConfirmDialog
+        message={`Would you like to delete '${currentRow?.title}'?`}
+        open={deleteDialogOpen}
+        onConfirm={confirmDelete}
+      />
+
+      {currentRow && (
+        <ModalFiles
+          open={showFilesModal}
+          onClose={handleCloseFilesModal}
+          files={currentRow.files}
+        />
+      )}
     </Container>
   );
 };

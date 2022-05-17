@@ -26,6 +26,7 @@ class CreateDocumentService {
     const { title, description, files } = data;
 
     const dataToSave = {
+      id: undefined,
       title,
       description,
       userId,

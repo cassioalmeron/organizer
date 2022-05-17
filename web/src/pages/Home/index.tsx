@@ -1,33 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable react/jsx-one-expression-per-line */
 import styled from '@emotion/styled';
-import {
-  Box,
-  BoxProps,
-  Button,
-  Container,
-  Divider,
-  TextField,
-} from '@mui/material';
+import { BoxProps, Button, Container, Divider, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../hooks/auth';
 
-interface ContainerProps extends BoxProps {
-  open?: boolean;
-}
-
-const FormBox = styled(Box, {
-  shouldForwardProp: prop => prop !== 'open',
-})<ContainerProps>(({ theme, open }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-
-  background: 'white',
-}));
+import { FormBox } from './styles';
 
 interface CustomButtonProps extends BoxProps {
   open?: boolean;
@@ -43,7 +23,6 @@ const CustomButton = styled(Button, {
 
 export default function Home() {
   const navigate = useNavigate();
-  const { auth } = useAuth();
   const [keyWord, setKeyWord] = useState('');
 
   const handleSearch = useCallback(() => {
@@ -57,7 +36,6 @@ export default function Home() {
   return (
     <Container>
       <FormBox>
-        {/* <Item> */}
         <br />
         <br />
         {/* Welcome {auth.user.name} */}
