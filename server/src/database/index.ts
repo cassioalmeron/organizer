@@ -13,8 +13,8 @@ createConnections([
     database: 'organizer',
     entities: [
       process.env.NODE_ENV === 'desenv'
-        ? './src/models/*.ts'
-        : './dist/models/*.js',
+        ? './src/entities/*.ts'
+        : './dist/entities/*.js',
     ],
     migrations: [
       process.env.NODE_ENV === 'desenv'
