@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import { getRepository, Repository } from 'typeorm';
-import HashTag from '../models/HashTag';
+import HashTag from '../entities/HashTag';
 
 class HashtagRepository {
   constructor() {

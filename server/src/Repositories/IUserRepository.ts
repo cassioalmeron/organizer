@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
-import User from '../models/User';
+import User from '../entities/User';
 
 export type CreateUserDto = {
   socialId: string;

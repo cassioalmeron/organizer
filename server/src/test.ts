@@ -3,9 +3,9 @@ import 'dotenv/config';
 
 import './database';
 import { getRepository } from 'typeorm';
-import User from './models/User';
-import File from './models/File';
-import Document from './models/Document';
+import User from './entities/User';
+import File from './entities/File';
+import Document from './entities/Document';
 import HashtagRepository from './Repositories/HashtagRepository';
 import CreateDocumentService from './Services/CreateDocumentService';
 import DocumentRepository from './Repositories/DocumentRepository';
@@ -49,7 +49,6 @@ async function updateDeocument() {
   // documentRepository.delete(1, 1);
 
   const dto: DocumentDto = {
-    id: 4,
     title: 'New Title',
     hashTags: ['Iclen'],
   };
@@ -105,7 +104,6 @@ async function test() {
   // const document = await documentRepository.findById(4, 1);
 
   const dto: DocumentDto = {
-    id: 4,
     title: 'New Title',
     // hashTags: ['Iclen'],
     files: [
@@ -116,7 +114,7 @@ async function test() {
   };
 
   const service = new UpdateDocumentService();
-  const document = await service.execute(dto, 1);
+  const document = await service.execute(dto, 1, 1);
   console.log(document);
 
   // const document = await documentRepository.findOneOrFail({

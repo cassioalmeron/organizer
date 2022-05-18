@@ -1,5 +1,5 @@
 import { getRepository, Raw, Repository } from 'typeorm';
-import Document from '../models/Document';
+import Document from '../entities/Document';
 
 type SearchResult = {
   id: number;

@@ -1,5 +1,5 @@
 import { getRepository, Repository } from 'typeorm';
-import User from '../models/User';
+import User from '../entities/User';
 import IUserRepository, { CreateUserDto } from './IUserRepository';
 
 class UserRepository implements IUserRepository {

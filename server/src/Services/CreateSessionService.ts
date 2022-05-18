@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-constructor */
 import { inject, injectable } from 'tsyringe';
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../entities/User';
 import CreateUserService from './CreateUserService';
 import IUserRepository from '../Repositories/IUserRepository';
 import authConfig from '../config/auth';

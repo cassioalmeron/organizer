@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-import Document from '../models/Document';
-import HashTag from '../models/HashTag';
+import Document from '../entities/Document';
+import HashTag from '../entities/HashTag';
 import DocumentRepository from '../Repositories/DocumentRepository';
 import HashtagRepository from '../Repositories/HashtagRepository';
 

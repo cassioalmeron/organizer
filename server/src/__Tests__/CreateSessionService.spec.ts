@@ -1,6 +1,8 @@
-import FakeUserRepository from '../Repositories/fakes/FakeUserRepository';
+import 'reflect-metadata';
+
 import CreateSessionService from '../Services/CreateSessionService';
 import CreateUserService from '../Services/CreateUserService';
+import FakeUserRepository from './fakes/FakeUserRepository';
 
 let fakeUserRepository: FakeUserRepository;
 let createSessionService: CreateSessionService;

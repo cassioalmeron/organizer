@@ -1,5 +1,7 @@
-import User from '../../models/User';
-import IUserRepository, { CreateUserDto } from '../IUserRepository';
+import User from '../../entities/User';
+import IUserRepository, {
+  CreateUserDto,
+} from '../../Repositories/IUserRepository';
 
 class FakeUserRepository implements IUserRepository {
   private users: User[] = [];

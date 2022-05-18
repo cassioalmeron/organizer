@@ -120,7 +120,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['<rootDir>/src/setup-test-env.ts'],
+  setupFiles: ['<rootDir>/src/__Tests__/setup-test-env.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: ['./jest.setup.ts'],
@@ -138,7 +138,7 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ['**/src/__Tests__/**/*.[jt]s?(x)'],
+  testMatch: ['**/src/__Tests__/**/*spec.[jt]s?(x)'],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [

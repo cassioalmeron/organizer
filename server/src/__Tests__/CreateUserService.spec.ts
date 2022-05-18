@@ -1,5 +1,5 @@
-import FakeUserRepository from '../Repositories/fakes/FakeUserRepository';
 import CreateUserService from '../Services/CreateUserService';
+import FakeUserRepository from './fakes/FakeUserRepository';
 
 let fakeUserRepository: FakeUserRepository;
 let createUserService: CreateUserService;

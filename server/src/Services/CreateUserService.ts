@@ -3,7 +3,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import AppError from '../errors/AppError';
-import User from '../models/User';
+import User from '../entities/User';
 import IUserRepository from '../Repositories/IUserRepository';
 
 export type UserDto = {
