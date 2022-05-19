@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {
   IconButton,
   MenuItem,
@@ -10,6 +10,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth';
+import { Name } from './styles';
 
 const drawerWidth = 240;
 
@@ -30,13 +31,10 @@ const AppBarContainer = styled(MuiAppBar, {
 }));
 
 const AppBar: React.FC = () => {
+  const { auth } = useAuth();
+
   const navigate = useNavigate();
   const { signOut } = useAuth();
-
-  const [open, setOpen] = useState(false);
-  // const toggleDrawer = () => {
-  //   setOpen(!open);
-  // };
 
   const handleLogoff = useCallback(() => {
     signOut();
@@ -44,24 +42,12 @@ const AppBar: React.FC = () => {
   }, [navigate]);
 
   return (
-    <AppBarContainer open={open}>
+    <AppBarContainer>
       <Toolbar
         sx={{
           pr: '24px', // keep right padding when drawer closed
         }}
       >
-        {/* <IconButton
-    edge="start"
-    color="inherit"
-    aria-label="open drawer"
-    onClick={toggleDrawer}
-    sx={{
-      marginRight: '36px',
-      ...(open && { display: 'none' }),
-    }}
-  >
-    <MenuIcon />
-  </IconButton> */}
         <Typography
           component="h1"
           variant="h6"
@@ -69,15 +55,16 @@ const AppBar: React.FC = () => {
           noWrap
           sx={{ flexGrow: 1 }}
         >
-          Dashboard
+          Organizer
         </Typography>
-        {/* <IconButton color="inherit">
-    <Badge badgeContent={4} color="secondary">
-      <NotificationsIcon />
-    </Badge>
-  </IconButton> */}
 
         <MenuItem onClick={handleLogoff}>
+          {auth && (
+            <>
+              <span>Welcome</span>
+              <Name>{auth?.user.name}</Name>
+            </>
+          )}
           <IconButton aria-label="Logoff" color="inherit">
             <ExitToAppIcon />
           </IconButton>

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import CreateUserService from '../Services/CreateUserService';
 import FakeUserRepository from './fakes/FakeUserRepository';
 

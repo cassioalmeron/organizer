@@ -1,9 +1,12 @@
+/* eslint-disable no-useless-constructor */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
+import { inject, injectable } from 'tsyringe';
 import Document from '../entities/Document';
-import DocumentRepository from '../Repositories/DocumentRepository';
-import HashtagRepository from '../Repositories/HashtagRepository';
+import IDocumentRepository from '../Repositories/IDocumentRepository';
+import IHashTagRepository from '../Repositories/IHashTagRepository';
+import GetHashTagsService from './GetHashTagsService';
 
 export type DocumentDto = {
   title?: string;
@@ -15,7 +18,14 @@ export type DocumentDto = {
   }[];
 };
 
+@injectable()
 class UpdateDocumentService {
+  constructor(
+    @inject('DocumentRepository')
+    private documentRepository: IDocumentRepository,
+    @inject('HashtagRepository') private hashtagRepository: IHashTagRepository,
+  ) {}
+
   public async execute(
     data: DocumentDto,
     id: number,
@@ -30,19 +40,15 @@ class UpdateDocumentService {
     };
 
     if (hashTags) {
-      const hashtagRepository = new HashtagRepository();
-      const hashTagToSave = await hashtagRepository.getHashTags(
-        hashTags,
-        userId,
-      );
+      const getHashTagsService = new GetHashTagsService(this.hashtagRepository);
+      const hashTagToSave = await getHashTagsService.execute(hashTags, userId);
       dataToSave.hashTags = hashTagToSave;
     }
 
-    const documentRepository = new DocumentRepository();
-    let document = await documentRepository.findById(id, userId);
+    let document = await this.documentRepository.findById(id, userId);
     if (document) {
       Object.assign(document, dataToSave);
-      document = await documentRepository.save(document);
+      document = await this.documentRepository.save(document);
     }
     return document;
   }

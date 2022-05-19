@@ -1,25 +1,11 @@
 import { getRepository, Raw, Repository } from 'typeorm';
 import Document from '../entities/Document';
+import IDocumentRepository, {
+  FindToEditResultDto,
+  SearchResultDto,
+} from './IDocumentRepository';
 
-type SearchResult = {
-  id: number;
-  description: string;
-  files: string[];
-  hashTags: string[];
-};
-
-type FindToEditResult = {
-  id: number;
-  title: string;
-  description?: string;
-  files: {
-    id: number;
-    url: string;
-  }[];
-  hashTags: string[];
-};
-
-class UserRepository {
+class DocumentRepository implements IDocumentRepository {
   constructor() {
     this.repository = getRepository(Document);
   }
@@ -41,7 +27,7 @@ class UserRepository {
   public async findToEdit(
     id: number,
     userId: number,
-  ): Promise<FindToEditResult | undefined> {
+  ): Promise<FindToEditResultDto | undefined> {
     const document = await this.repository.findOne({
       where: { id, userId },
       relations: ['hashTags', 'files'],
@@ -63,7 +49,7 @@ class UserRepository {
   public async search(
     keyWord: string,
     userId: number,
-  ): Promise<SearchResult[]> {
+  ): Promise<SearchResultDto[]> {
     const queryResult = await this.repository.find({
       select: ['id', 'title'],
       relations: ['files', 'hashTags'],
@@ -106,12 +92,12 @@ class UserRepository {
   }
 }
 
-export default UserRepository;
+export default DocumentRepository;
 
-function convertToSearchResult(document: Document): SearchResult {
+function convertToSearchResult(document: Document): SearchResultDto {
   console.log(document);
 
-  const result: SearchResult = {
+  const result: SearchResultDto = {
     ...document,
     files: document.files.map(file => file.url),
     hashTags: document.hashTags.map(tag => tag.description),

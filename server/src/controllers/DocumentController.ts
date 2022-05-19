@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 import DocumentRepository from '../Repositories/DocumentRepository';
 import CreateDocumentService from '../Services/CreateDocumentService';
 import UpdateDocumentService from '../Services/UpdateDocumentService';
@@ -22,15 +23,18 @@ class DocumentController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    const service = new CreateDocumentService();
-    const document = await service.execute(request.body, request.user.id);
+    const createDocumentService = container.resolve(CreateDocumentService);
+    const document = await createDocumentService.execute(
+      request.body,
+      request.user.id,
+    );
     return response.status(201).json(document);
   }
 
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const service = new UpdateDocumentService();
-    const document = await service.execute(
+    const updateDocumentService = container.resolve(UpdateDocumentService);
+    const document = await updateDocumentService.execute(
       request.body,
       Number(id),
       request.user.id,

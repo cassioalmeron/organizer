@@ -1,10 +1,13 @@
+/* eslint-disable no-useless-constructor */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
+import { inject, injectable } from 'tsyringe';
 import Document from '../entities/Document';
 import HashTag from '../entities/HashTag';
-import DocumentRepository from '../Repositories/DocumentRepository';
-import HashtagRepository from '../Repositories/HashtagRepository';
+import IDocumentRepository from '../Repositories/IDocumentRepository';
+import IHashTagRepository from '../Repositories/IHashTagRepository';
+import GetHashTagsService from './GetHashTagsService';
 
 export type DocumentDto = {
   title: string;
@@ -15,10 +18,17 @@ export type DocumentDto = {
   }[];
 };
 
+@injectable()
 class CreateDocumentService {
+  constructor(
+    @inject('DocumentRepository')
+    private documentRepository: IDocumentRepository,
+    @inject('HashtagRepository') private hashtagRepository: IHashTagRepository,
+  ) {}
+
   public async execute(data: DocumentDto, userId: number): Promise<Document> {
-    const hashtagRepository = new HashtagRepository();
-    const hashTags: HashTag[] = await hashtagRepository.getHashTags(
+    const getHashTagsService = new GetHashTagsService(this.hashtagRepository);
+    const hashTags: HashTag[] = await getHashTagsService.execute(
       data.hashTags,
       userId,
     );
@@ -34,8 +44,7 @@ class CreateDocumentService {
       files,
     };
 
-    const documentRepository = new DocumentRepository();
-    return documentRepository.save(dataToSave);
+    return this.documentRepository.save(dataToSave);
   }
 }
 

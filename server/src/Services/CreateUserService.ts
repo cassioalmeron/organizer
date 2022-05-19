@@ -1,7 +1,5 @@
 /* eslint-disable no-useless-constructor */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
+import { inject, injectable } from 'tsyringe';
 import AppError from '../errors/AppError';
 import User from '../entities/User';
 import IUserRepository from '../Repositories/IUserRepository';
@@ -12,8 +10,11 @@ export type UserDto = {
   socialId: string;
 };
 
+@injectable()
 class CreateUserService {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository,
+  ) {}
 
   public async execute(data: UserDto): Promise<User> {
     const emailExists = await this.userRepository.emailExists(data.email);

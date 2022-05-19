@@ -3,37 +3,26 @@
 /* eslint-disable no-restricted-syntax */
 import { getRepository, Repository } from 'typeorm';
 import HashTag from '../entities/HashTag';
+import IHashTagRepository from './IHashTagRepository';
 
-class HashtagRepository {
+class HashTagRepository implements IHashTagRepository {
   constructor() {
     this.repository = getRepository(HashTag);
   }
 
   private repository: Repository<HashTag>;
 
-  async getHashTags(hashTags: string[], userId: number): Promise<HashTag[]> {
-    const result: HashTag[] = [];
-
-    for (const i in hashTags) {
-      const hashTag = await this.getHashTagSaveIfNotExists(hashTags[i], userId);
-      result.push(hashTag);
-    }
-
-    return result;
-  }
-
-  async getHashTagSaveIfNotExists(
+  public async findByDescription(
     description: string,
     userId: number,
-  ): Promise<HashTag> {
-    let hashtag = await this.repository.findOne({ description, userId });
-    if (!hashtag) {
-      hashtag = this.repository.create({ description, userId });
-      hashtag = await this.repository.save(hashtag);
-    }
+  ): Promise<HashTag | undefined> {
+    return this.repository.findOne({ description, userId });
+  }
 
-    return hashtag;
+  public async save(description: string, userId: number): Promise<HashTag> {
+    const hashtag = this.repository.create({ description, userId });
+    return this.repository.save(hashtag);
   }
 }
 
-export default HashtagRepository;
+export default HashTagRepository;
