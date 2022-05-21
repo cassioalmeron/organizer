@@ -24,10 +24,7 @@ class ShowDocumentService {
     id: number,
     userId: number,
   ): Promise<FindToEditResultDto | undefined> {
-    const document = await this.documentRepository.findToEdit(
-      Number(id),
-      userId,
-    );
+    const document = await this.documentRepository.findById(Number(id), userId);
 
     if (!document) return undefined;
 

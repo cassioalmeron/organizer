@@ -21,16 +21,6 @@ class DocumentRepository implements IDocumentRepository {
     return document;
   }
 
-  public async findToEdit(
-    id: number,
-    userId: number,
-  ): Promise<Document | undefined> {
-    return this.repository.findOne({
-      where: { id, userId },
-      relations: ['hashTags', 'files'],
-    });
-  }
-
   public async search(keyWord: string, userId: number): Promise<Document[]> {
     const queryResult = await this.repository.find({
       select: ['id', 'title'],

@@ -4,7 +4,7 @@ import IDocumentRepository from '../Repositories/IDocumentRepository';
 
 export type SearchResultDto = {
   id: number;
-  description: string;
+  description?: string;
   files: string[];
   hashTags: string[];
 };

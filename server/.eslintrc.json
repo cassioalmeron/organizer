@@ -30,6 +30,7 @@
       "no-useless-constructor": "off",
       "prettier/prettier": "error",
       "class-methods-use-this": "off",
+      "no-param-reassign": "off",
       "@typescript-eslint/camelcase": "off",
       "@typescript-eslint/no-unused-vars": ["error", {
         "argsIgnorePattern": "_"

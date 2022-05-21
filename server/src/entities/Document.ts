@@ -12,7 +12,7 @@ class Document extends ModelBase {
   title: string;
 
   @Column()
-  description: string;
+  description?: string;
 
   @ManyToMany(() => HashTag)
   @JoinTable({
