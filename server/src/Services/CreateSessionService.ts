@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-constructor */
 import { inject, injectable } from 'tsyringe';
 import jwt from 'jsonwebtoken';
 import User from '../entities/User';

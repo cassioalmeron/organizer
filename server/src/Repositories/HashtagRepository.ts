@@ -1,6 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 import { getRepository, Repository } from 'typeorm';
 import HashTag from '../entities/HashTag';
 import IHashTagRepository from './IHashTagRepository';

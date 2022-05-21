@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-constructor */
 import { inject, injectable } from 'tsyringe';
 import AppError from '../errors/AppError';
 import User from '../entities/User';

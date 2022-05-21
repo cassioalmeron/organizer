@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/interface-name-prefix */
 import User from '../entities/User';
 
 export type CreateUserDto = {
