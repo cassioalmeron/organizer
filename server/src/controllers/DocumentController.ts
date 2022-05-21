@@ -3,13 +3,14 @@ import { container } from 'tsyringe';
 import DocumentRepository from '../Repositories/DocumentRepository';
 import CreateDocumentService from '../Services/CreateDocumentService';
 import DeleteDocumentService from '../Services/DeleteDocumentService';
+import SearchDocumentService from '../Services/SearchDocumentService';
 import UpdateDocumentService from '../Services/UpdateDocumentService';
 
 class DocumentController {
   async show(request: Request, response: Response): Promise<Response> {
     const { keyWord } = request.query;
-    const repository = new DocumentRepository();
-    const result = await repository.search(
+    const searchDocumentService = container.resolve(SearchDocumentService);
+    const result = await searchDocumentService.execute(
       keyWord ? String(keyWord) : '',
       request.user.id,
     );
