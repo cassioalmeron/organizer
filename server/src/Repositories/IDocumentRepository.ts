@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/interface-name-prefix */
 import Document from '../entities/Document';
 
 export type FindToEditResultDto = {
@@ -27,5 +26,5 @@ export default interface IDocumentRepository {
   ): Promise<FindToEditResultDto | undefined>;
   search(keyWord: string, userId: number): Promise<SearchResultDto[]>;
   save(data: { id?: number }): Promise<Document>;
-  delete(id: number, userId: number): Promise<void>;
+  delete(id: number, userId: number): Promise<boolean>;
 }

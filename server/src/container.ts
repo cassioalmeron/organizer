@@ -15,5 +15,3 @@ container.registerSingleton<IHashtagRepository>(
   'HashtagRepository',
   HashtagRepository,
 );
-
-console.log('containers');

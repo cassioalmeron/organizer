@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { Container, Fab, Modal } from '@mui/material';
+import { Container, Fab } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import RemoveIcon from '@mui/icons-material/Remove';

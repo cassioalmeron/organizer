@@ -87,16 +87,15 @@ class DocumentRepository implements IDocumentRepository {
     return document;
   }
 
-  public async delete(id: number, userId: number): Promise<void> {
-    this.repository.delete({ id, userId });
+  public async delete(id: number, userId: number): Promise<boolean> {
+    const deleteResult = await this.repository.delete({ id, userId });
+    return deleteResult.affected ? deleteResult.affected > 0 : false;
   }
 }
 
 export default DocumentRepository;
 
 function convertToSearchResult(document: Document): SearchResultDto {
-  console.log(document);
-
   const result: SearchResultDto = {
     ...document,
     files: document.files.map(file => file.url),

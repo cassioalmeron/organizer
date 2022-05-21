@@ -29,7 +29,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData(undefined);
   }, []);
 
-  const post = useCallback(
+  const postToApi = useCallback(
     async (socialToken: string, callback: ApiCallback) => {
       await apiPost(
         'session',
@@ -70,7 +70,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
           const socialToken = createToken(credentials);
 
-          await post(socialToken, callback);
+          await postToApi(socialToken, callback);
         }
       } catch (err: any) {
         if (err.code === 'auth/account-exists-with-different-credential') {
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
           const socialToken = createToken(credentials);
 
-          await post(socialToken, callback);
+          await postToApi(socialToken, callback);
         } else {
           toast.warning('No selected account!');
         }
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         if (callback.finally) callback.finally();
       }
     },
-    [post],
+    [postToApi],
   );
 
   return (

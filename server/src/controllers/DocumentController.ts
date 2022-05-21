@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import DocumentRepository from '../Repositories/DocumentRepository';
 import CreateDocumentService from '../Services/CreateDocumentService';
+import DeleteDocumentService from '../Services/DeleteDocumentService';
 import UpdateDocumentService from '../Services/UpdateDocumentService';
 
 class DocumentController {
@@ -45,10 +46,13 @@ class DocumentController {
   async delete(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    const repository = new DocumentRepository();
-    repository.delete(Number(id), request.user.id);
+    const deleteDocumentService = container.resolve(DeleteDocumentService);
+    const deleted = await deleteDocumentService.execute(
+      Number(id),
+      request.user.id,
+    );
 
-    return response.status(204).json({});
+    return response.status(deleted ? 204 : 410).json({});
   }
 }
 

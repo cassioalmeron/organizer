@@ -26,6 +26,8 @@
     "rules": {
       "no-underscore-dangle": "off",
       "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/interface-name-prefix": "off",
+      "no-useless-constructor": "off",
       "prettier/prettier": "error",
       "class-methods-use-this": "off",
       "@typescript-eslint/camelcase": "off",

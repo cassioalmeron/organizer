@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, Container, Fab, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -85,29 +86,7 @@ const Document: React.FC = () => {
         loadEditData(data);
       });
     }
-    // else {
-    //   loadEditData(initialValues);
-    // }
   }, [id, loadEditData]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     // loadEditData({
-  //     //   title: undefined,
-  //     //   description: undefined,
-  //     //   hashTags: [],
-  //     //   files: [{ id: 1, url: '' }],
-  //     // });
-  //     console.log({
-  //       title: undefined,
-  //       description: undefined,
-  //       hashTags: [],
-  //       files: [{ id: 1, url: '' }],
-  //     });
-  //   };
-  // });
-
-  // function loadEditData(data: Document) {
 
   return (
     <Container>
