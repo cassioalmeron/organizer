@@ -1,9 +1,6 @@
 import { getRepository, Raw, Repository } from 'typeorm';
 import Document from '../entities/Document';
-import IDocumentRepository, {
-  FindToEditResultDto,
-  SearchResultDto,
-} from './IDocumentRepository';
+import IDocumentRepository, { SearchResultDto } from './IDocumentRepository';
 
 class DocumentRepository implements IDocumentRepository {
   constructor() {
@@ -27,23 +24,11 @@ class DocumentRepository implements IDocumentRepository {
   public async findToEdit(
     id: number,
     userId: number,
-  ): Promise<FindToEditResultDto | undefined> {
-    const document = await this.repository.findOne({
+  ): Promise<Document | undefined> {
+    return this.repository.findOne({
       where: { id, userId },
       relations: ['hashTags', 'files'],
     });
-
-    if (!document) return undefined;
-
-    return {
-      id: document.id,
-      title: document.title,
-      description: document.description,
-      files: document.files.map(file => {
-        return { id: file.id, url: file.url };
-      }),
-      hashTags: document.hashTags.map(tag => tag.description),
-    };
   }
 
   public async search(

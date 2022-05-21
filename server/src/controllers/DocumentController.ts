@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import DocumentRepository from '../Repositories/DocumentRepository';
 import CreateDocumentService from '../Services/CreateDocumentService';
 import DeleteDocumentService from '../Services/DeleteDocumentService';
 import SearchDocumentService from '../Services/SearchDocumentService';
+import ShowDocumentService from '../Services/ShowDocumentService';
 import UpdateDocumentService from '../Services/UpdateDocumentService';
 
 class DocumentController {
@@ -19,8 +19,11 @@ class DocumentController {
 
   async index(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
-    const repository = new DocumentRepository();
-    const document = await repository.findToEdit(Number(id), request.user.id);
+    const showDocumentService = container.resolve(ShowDocumentService);
+    const document = await showDocumentService.execute(
+      Number(id),
+      request.user.id,
+    );
     return response.status(200).json(document);
   }
 
