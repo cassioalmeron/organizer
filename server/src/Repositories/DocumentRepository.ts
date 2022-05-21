@@ -1,6 +1,6 @@
 import { getRepository, Raw, Repository } from 'typeorm';
 import Document from '../entities/Document';
-import IDocumentRepository, { SearchResultDto } from './IDocumentRepository';
+import IDocumentRepository from './IDocumentRepository';
 
 class DocumentRepository implements IDocumentRepository {
   constructor() {
@@ -31,10 +31,7 @@ class DocumentRepository implements IDocumentRepository {
     });
   }
 
-  public async search(
-    keyWord: string,
-    userId: number,
-  ): Promise<SearchResultDto[]> {
+  public async search(keyWord: string, userId: number): Promise<Document[]> {
     const queryResult = await this.repository.find({
       select: ['id', 'title'],
       relations: ['files', 'hashTags'],
@@ -58,7 +55,7 @@ class DocumentRepository implements IDocumentRepository {
       ],
     });
 
-    return queryResult.map(convertToSearchResult);
+    return queryResult;
   }
 
   public async save(data: { id?: number }): Promise<Document> {
@@ -79,12 +76,3 @@ class DocumentRepository implements IDocumentRepository {
 }
 
 export default DocumentRepository;
-
-function convertToSearchResult(document: Document): SearchResultDto {
-  const result: SearchResultDto = {
-    ...document,
-    files: document.files.map(file => file.url),
-    hashTags: document.hashTags.map(tag => tag.description),
-  };
-  return result;
-}
