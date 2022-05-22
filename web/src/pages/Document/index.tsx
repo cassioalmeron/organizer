@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 import { Box, Button, Container, Fab, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -37,6 +39,11 @@ type File = {
   url: string;
 };
 
+type Validation = {
+  field: string;
+  message: string;
+};
+
 const initialValues: Document = {
   title: undefined,
   description: undefined,
@@ -44,8 +51,13 @@ const initialValues: Document = {
   files: [{ id: 1, url: '' }],
 };
 
+// const persons: { [id: string]: IPerson } = {};
+
 const Document: React.FC = () => {
   const [document, setDocument] = useState<Document>(initialValues);
+  const [validation, setValidation] = useState<{
+    [id: string]: string;
+  }>({});
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -82,11 +94,26 @@ const Document: React.FC = () => {
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      if (id) {
-        const documentToSave = { ...document };
-        delete documentToSave.id;
-        apiPut(`/Document/${id}`, documentToSave, successfulAndNavigate);
-      } else apiPost('/Document', document, successfulAndNavigate);
+      validationSchema
+        .validate(document, { abortEarly: false })
+        .then(function (value) {
+          // alert(JSON.stringify(value, null, 2));
+          // console.log(value); // returns car object
+
+          if (id) {
+            const documentToSave = { ...document };
+            delete documentToSave.id;
+            apiPut(`/Document/${id}`, documentToSave, successfulAndNavigate);
+          } else apiPost('/Document', document, successfulAndNavigate);
+        })
+        .catch(function (err) {
+          const v: { [id: string]: string } = {};
+          for (const i in err.inner) {
+            const inner: any = err.inner[i];
+            v[inner.path] = inner.message;
+          }
+          setValidation(v);
+        });
     },
     [document, id, successfulAndNavigate],
   );
@@ -103,6 +130,8 @@ const Document: React.FC = () => {
           autoFocus
           value={document.title}
           onChange={handleInputChange}
+          error={Boolean(validation.title)}
+          helperText={validation.title}
           // error={formik.touched.title && Boolean(formik.errors.title)}
           // helperText={formik.touched.title && formik.errors.title}
         />
