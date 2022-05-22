@@ -31,7 +31,7 @@ router.put(
   celebrate({
     [Segments.BODY]: {
       title: Joi.string(),
-      description: Joi.string(),
+      description: Joi.string().allow(null),
       hashTags: Joi.array().items(Joi.string()),
       files: Joi.array()
         .items(

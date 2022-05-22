@@ -1,13 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, Container, Fab, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import * as Yup from 'yup';
-import { FieldArray, FormikProvider, useFormik } from 'formik';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { toast } from 'material-react-toastify';
 import InputTags from '../../components/InputTags';
 import { apiGet, apiPost, apiPut } from '../../services/api';
@@ -41,44 +45,14 @@ const initialValues: Document = {
 };
 
 const Document: React.FC = () => {
-  const [tags, setTags] = useState<string[]>([]);
+  const [document, setDocument] = useState<Document>(initialValues);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const submit = useCallback(
-    (values: any): void => {
-      if (id) {
-        apiPut(`/Document/${id}`, values, () => {
-          toast('Document saved successful!');
-          navigate('/');
-        });
-      } else {
-        apiPost('/Document', values, () => {
-          toast('Document saved successful!');
-          navigate('/');
-        });
-      }
-    },
-    [id, navigate],
-  );
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: submit,
-  });
-
-  const loadEditData = useCallback(
-    (data: Document) => {
-      const loadedData = { ...data };
-      delete loadedData.id;
-
-      Object.assign(initialValues, loadedData);
-      setTags(data.hashTags);
-    },
-    [formik.values],
-  );
+  const loadEditData = useCallback((data: Document) => {
+    setDocument(data);
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -88,114 +62,159 @@ const Document: React.FC = () => {
     }
   }, [id, loadEditData]);
 
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setDocument({
+        ...document,
+        [name]: value,
+      });
+    },
+    [document],
+  );
+
+  const successfulAndNavigate = useCallback(() => {
+    toast('Document saved successful!');
+    navigate('/');
+  }, [navigate]);
+
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+      if (id) {
+        const documentToSave = { ...document };
+        delete documentToSave.id;
+        apiPut(`/Document/${id}`, documentToSave, successfulAndNavigate);
+      } else apiPost('/Document', document, successfulAndNavigate);
+    },
+    [document, id, successfulAndNavigate],
+  );
+
   return (
     <Container>
-      <FormikProvider value={formik}>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            margin="normal"
-            fullWidth
-            id="title"
-            label="Title"
-            name="title"
-            autoFocus
-            value={formik.values.title}
-            onChange={formik.handleChange}
-            error={formik.touched.title && Boolean(formik.errors.title)}
-            helperText={formik.touched.title && formik.errors.title}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            name="description"
-            label="Description"
-            id="description"
-            multiline
-            rows={4}
-            value={formik.values.description}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.description && Boolean(formik.errors.description)
-            }
-            helperText={formik.touched.description && formik.errors.description}
-          />
+      <form onSubmit={handleSubmit}>
+        <TextField
+          margin="normal"
+          fullWidth
+          id="title"
+          label="Title"
+          name="title"
+          autoFocus
+          value={document.title}
+          onChange={handleInputChange}
+          // error={formik.touched.title && Boolean(formik.errors.title)}
+          // helperText={formik.touched.title && formik.errors.title}
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          name="description"
+          label="Description"
+          id="description"
+          multiline
+          rows={4}
+          value={document.description}
+          onChange={handleInputChange}
+          // error={
+          //   formik.touched.description && Boolean(formik.errors.description)
+          // }
+          // helperText={formik.touched.description && formik.errors.description}
+        />
 
-          <InputTags
-            tags={tags}
-            onTagsChanged={newTags => {
-              formik.setFieldValue('hashTags', newTags);
-              setTags(newTags);
-            }}
-          />
+        <InputTags
+          tags={document.hashTags}
+          onTagsChanged={newTags => {
+            setDocument({
+              ...document,
+              hashTags: newTags,
+            });
+          }}
+        />
 
-          <FieldArray name="files">
-            {({ insert, remove, push }) => (
-              <div>
-                {formik.values.files.map((file, index) => (
-                  <FileBox key={file.id}>
-                    <TextField
-                      margin="normal"
-                      id="url"
-                      label="url"
-                      name={`files.${index}.url`}
-                      onChange={formik.handleChange}
-                      fullWidth
-                      value={file.url}
-                      // error={
-                      //   formik.touched.files?[index].url &&
-                      //   Boolean(formik.errors.files?[index].url)
-                      // }
-                      // helperText={
-                      //   formik.touched.files[index].url &&
-                      //   formik.errors.files[index].url
-                      // }
-                    />
-                    <Fab
-                      size="small"
-                      color="error"
-                      aria-label="add"
-                      onClick={() => remove(index)}
-                      sx={{ marginLeft: '10px' }}
-                    >
-                      <RemoveIcon />
-                    </Fab>
-                  </FileBox>
-                ))}
+        <div>
+          {document.files.map((file, index) => (
+            <FileBox key={file.id}>
+              <TextField
+                margin="normal"
+                id="url"
+                label="url"
+                name={`files.${index}.url`}
+                onChange={e => {
+                  const files = [...document.files];
+                  files[index].url = e.target.value;
+                  setDocument({
+                    ...document,
+                    files,
+                  });
+                }}
+                fullWidth
+                value={file.url}
+                // error={
+                //   formik.touched.files?[index].url &&
+                //   Boolean(formik.errors.files?[index].url)
+                // }
+                // helperText={
+                //   formik.touched.files[index].url &&
+                //   formik.errors.files[index].url
+                // }
+              />
+              <Fab
+                size="small"
+                color="error"
+                aria-label="add"
+                onClick={() => {
+                  const files = [
+                    ...document.files.filter((_, i) => i !== index),
+                  ];
+                  setDocument({
+                    ...document,
+                    files,
+                  });
+                }}
+                sx={{ marginLeft: '10px' }}
+              >
+                <RemoveIcon />
+              </Fab>
+            </FileBox>
+          ))}
 
-                <Fab
-                  size="small"
-                  color="secondary"
-                  aria-label="add"
-                  onClick={() => handleAddFile(formik.values.files, push)}
-                >
-                  <AddIcon />
-                </Fab>
-              </div>
-            )}
-          </FieldArray>
-
-          <br />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
+          <Fab
+            size="small"
+            color="secondary"
+            aria-label="add"
+            onClick={() => {
+              setDocument({
+                ...document,
+                files: [...document.files, createFile(document.files)],
+              });
             }}
           >
-            <Button type="submit" variant="contained">
-              Save
-            </Button>
-          </Box>
-        </form>
-      </FormikProvider>
+            <AddIcon />
+          </Fab>
+        </div>
+
+        <br />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Button type="submit" variant="contained">
+            Save
+          </Button>
+        </Box>
+      </form>
     </Container>
   );
 };
 
 export default Document;
 
-function handleAddFile(files: File[], push: (obj: any) => void) {
+function createFile(files: File[]): File {
   let id = 0;
   if (files.length > 0) id = files[files.length - 1].id + 1;
   const file: File = { id, url: '' };
-  push(file);
+  return file;
 }
