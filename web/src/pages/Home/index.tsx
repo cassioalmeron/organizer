@@ -48,8 +48,6 @@ export default function Home() {
           autoFocus
           fullWidth
           onChange={e => setKeyWord(e.target.value)}
-          inputProps={{ style: { fontSize: '32px' } }}
-          InputLabelProps={{ style: { fontSize: '32px' } }}
         />
         <Divider sx={{ my: 1 }} />
         <CustomButton type="button" onClick={handleSearch} variant="contained">
