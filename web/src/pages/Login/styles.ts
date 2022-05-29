@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import styled from 'styled-components';
 
 export const Google = styled.div`
@@ -17,4 +18,44 @@ export const Google = styled.div`
   span {
     margin-left: 10px;
   }
+`;
+
+export const ExternalLink = styled.a`
+  color: black;
+`;
+
+export const LogoBox = styled(Box)`
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const RightBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 40vw;
+`;
+
+export const LoginBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40vw;
+`;
+
+export const CreditsBox = styled(Box)`
+  margin-bottom: 10px;
+`;
+
+export const SocialCreditsBox = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 40vw;
 `;

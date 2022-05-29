@@ -38,7 +38,6 @@ export default function Home() {
       <FormBox>
         <br />
         <br />
-        {/* Welcome {auth.user.name} */}
         <TextField
           margin="normal"
           id="search"
