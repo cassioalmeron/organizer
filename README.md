@@ -22,7 +22,7 @@ A simple way to organize, classify and search those files.
 * Dependency Injection: tsyringe (https://github.com/microsoft/tsyringe)
 * Unit Tests: Jest (https://github.com/facebook/jest)
 
-### Back end (ReactJS)
+### Front end (ReactJS)
 
 * User Interface: Material UI (https://mui.com)
 * Forms Validation Schema: Yup (https://github.com/jquense/yup)
